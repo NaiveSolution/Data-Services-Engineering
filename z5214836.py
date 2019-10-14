@@ -7,6 +7,7 @@ def read_csv_files(file1, file2):
 
     summer_df = pd.read_csv('Olympics_dataset1.csv')
     winter_df = pd.read_csv('Olympics_dataset2.csv')
+    
     return summer_df, winter_df
 
 def join_and_clean_tables(summer_df, winter_df):
@@ -15,6 +16,7 @@ def join_and_clean_tables(summer_df, winter_df):
     total_df = pd.merge(summer_df, winter_df, how='left', on=['Team'])
     total_df = total_df.drop(total_df.columns[12:], axis=1)
     total_df.columns = ['Country', 'summer_rubbish', 'summer_participation', 'summer_gold', 'summer_silver', 'summer_bronze', 'summer_total', 'winter_participation', 'winter_gold', 'winter_silver', 'winter_bronze', 'winter_total']
+    
     return total_df
     
 def question_1():
@@ -24,7 +26,7 @@ def question_1():
     q1_df = join_and_clean_tables(summer_df, winter_df)
     q1_df = q1_df.set_index('Country')
     q1_df = q1_df.drop(index='Totals',axis=0)
-    print(q1_df.iloc[0:5].to_string())
+    print(q1_df.head().to_string())
 
 
 def question_2(print_val):
