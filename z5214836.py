@@ -5,8 +5,8 @@ pd.option_context('display.max_columns', None, 'display.max_rows', None)
 
 def read_csv_files(file1, file2):
 
-    summer_df = pd.read_csv('Olympics_dataset1.csv')
-    winter_df = pd.read_csv('Olympics_dataset2.csv')
+    summer_df = pd.read_csv('Olympics_dataset1.csv', thousands=',')
+    winter_df = pd.read_csv('Olympics_dataset2.csv',thousands=',')
     
     return summer_df, winter_df
 
@@ -24,6 +24,7 @@ def question_1(print_val):
     summer_df, winter_df = read_csv_files('Olympics_dataset1.csv','Olympics_dataset2.csv')
     q1_df = join_and_clean_tables(summer_df, winter_df)
     q1_df = q1_df[q1_df.Country != 'Totals']
+    #q1_df.to_csv('q1.csv')
     if print_val:
         print("--------------- question_1 ---------------")
         print(q1_df.head().to_string())
@@ -36,6 +37,7 @@ def question_2(print_val):
     q2_df = q2_df.set_index('Country')
     columns = ['summer_rubbish', 'summer_total' , 'winter_total']
     q2_df = q2_df.drop(columns, axis=1)
+    #q2_df.to_csv('q2.csv')
     if print_val:
         print("--------------- question_2 ---------------")
         print(q2_df.head().to_string())
@@ -46,6 +48,7 @@ def question_3(print_val):
     
     q3_df = question_2(None)
     q3_df = q3_df.dropna(axis=0, how='all')
+    #q3_df.to_csv('q3.csv')
     if print_val:
         print("--------------- question_3 ---------------")
         print(q3_df.tail(10).to_string())
@@ -53,8 +56,13 @@ def question_3(print_val):
     return q3_df
 
 def question_4():
+    q4_df = question_3(None)
+    #q4_df.to_csv('output.csv')
+    num_gold = q4_df['summer_gold'].str.replace(',','')
+    num_gold = pd.to_numeric(num_gold)
+    q4_df['summer_gold'] = num_gold
     print("--------------- question_4 ---------------")
-    pass
+    print(q4_df['summer_gold'].idxmax(axis=1))
 
 def question_5():
     print("--------------- question_5 ---------------")
