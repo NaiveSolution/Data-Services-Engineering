@@ -3,6 +3,16 @@ import pandas as pd
 #pd.set_option('display.max_columns', None, 'display.max_rows', None)
 pd.option_context('display.max_columns', None, 'display.max_rows', None)
 
+def convert_to_numeric(df):
+
+    column_list = list(df)
+    for e in column_list:
+        medal_count = df[e].str.replace(',','')
+        medal_count = pd.to_numeric(medal_count)
+        df[e] = medal_count
+
+    return df
+
 def read_csv_files(file1, file2):
 
     summer_df = pd.read_csv('Olympics_dataset1.csv', thousands=',')
@@ -58,14 +68,17 @@ def question_3(print_val):
 def question_4():
     q4_df = question_3(None)
     #q4_df.to_csv('output.csv')
-    num_gold = q4_df['summer_gold'].str.replace(',','')
-    num_gold = pd.to_numeric(num_gold)
-    q4_df['summer_gold'] = num_gold
+    q4_df = convert_to_numeric(q4_df)
     print("--------------- question_4 ---------------")
     print(q4_df['summer_gold'].idxmax(axis=1))
 
 def question_5():
+    q5_df = question_3(None)
+    q5_df = convert_to_numeric(q5_df)
+    diff = abs(q5_df['summer_gold'] - q5_df['winter_gold']).idxmax()
+
     print("--------------- question_5 ---------------")
+    print(diff.to_string())
     pass
 
 def question_6():
