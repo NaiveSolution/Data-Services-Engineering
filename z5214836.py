@@ -19,23 +19,21 @@ def join_and_clean_tables(summer_df, winter_df):
     
     return total_df
     
-def question_1():
+def question_1(print_val):
 
-    print("--------------- question_1 ---------------")
     summer_df, winter_df = read_csv_files('Olympics_dataset1.csv','Olympics_dataset2.csv')
     q1_df = join_and_clean_tables(summer_df, winter_df)
-    q1_df = q1_df.set_index('Country')
-    q1_df = q1_df.drop(index='Totals',axis=0)
-    print(q1_df.head().to_string())
-
+    q1_df = q1_df[q1_df.Country != 'Totals']
+    if print_val:
+        print("--------------- question_1 ---------------")
+        print(q1_df.head().to_string())
+    return q1_df
 
 def question_2(print_val):
     
-    summer_df, winter_df = read_csv_files('Olympics_dataset1.csv','Olympics_dataset2.csv')
-    q2_df = join_and_clean_tables(summer_df, winter_df)
+    q2_df = question_1(None)
     q2_df['Country'] = q2_df['Country'].apply(lambda x: x.lstrip().split('(')[0].strip(' '))
     q2_df = q2_df.set_index('Country')
-    q2_df = q2_df.drop(index='Totals',axis=0)
     columns = ['summer_rubbish', 'summer_total' , 'winter_total']
     q2_df = q2_df.drop(columns, axis=1)
     if print_val:
@@ -83,7 +81,7 @@ def question_10():
     pass
 
 if __name__ == "__main__":
-    question_1()
+    q1_df = question_1(1)
     q2_df = question_2(1)
     q3_df = question_3(1)
     question_4()
