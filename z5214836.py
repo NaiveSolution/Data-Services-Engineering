@@ -70,23 +70,32 @@ def question_4():
     #q4_df.to_csv('output.csv')
     q4_df = convert_to_numeric(q4_df)
     answer = q4_df.loc[(q4_df.summer_gold == q4_df['summer_gold'].max())]
-    answer.drop(answer.columns.difference(['summer_gold']),1, inplace=True)
+    answer = answer.drop(answer.columns.difference(['summer_gold']),1)
     print("--------------- question_4 ---------------")
-    print(answer.to_string())
+    print(answer['summer_gold'].to_string())
 
 def question_5():
     q5_df = question_3(None)
     q5_df = convert_to_numeric(q5_df)
     q5_df['difference'] = abs(q5_df['summer_gold'] - q5_df['winter_gold'])
     answer = q5_df.loc[(q5_df.difference == q5_df['difference'].max())]
-    answer.drop(answer.columns.difference(['difference']),1, inplace=True)
+    answer = answer.drop(answer.columns.difference(['difference']),1)
     print("--------------- question_5 ---------------")
     print(answer.to_string())
-    pass
 
 def question_6():
+    q6_df = question_3(None)
+    q6_df = convert_to_numeric(q6_df)
+    columns = ['summer_gold', 'summer_silver', 'summer_bronze', 'winter_gold', 'winter_silver', 'winter_bronze']
+    q6_df['total_medals'] = q6_df[columns].sum(axis=1)
+    q6_df.sort_values(by=['total_medals'], ascending=False,inplace=True)
+    q6_df.to_csv('q6.csv')
+    reduced_df = q6_df.drop(q6_df.columns.difference(['total_medals']),1)
+    top_5 = reduced_df.head(5)
+    bottom_5 = reduced_df.tail(5)
+    answer = pd.concat([top_5, bottom_5])
     print("--------------- question_6 ---------------")
-    pass
+    print(answer.to_string())
 
 def question_7():
     print("--------------- question_7 ---------------")
