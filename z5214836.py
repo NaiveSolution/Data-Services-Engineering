@@ -69,16 +69,19 @@ def question_4():
     q4_df = question_3(None)
     #q4_df.to_csv('output.csv')
     q4_df = convert_to_numeric(q4_df)
+    answer = q4_df.loc[(q4_df.summer_gold == q4_df['summer_gold'].max())]
+    answer.drop(answer.columns.difference(['summer_gold']),1, inplace=True)
     print("--------------- question_4 ---------------")
-    print(q4_df['summer_gold'].idxmax(axis=1))
+    print(answer.to_string())
 
 def question_5():
     q5_df = question_3(None)
     q5_df = convert_to_numeric(q5_df)
-    diff = abs(q5_df['summer_gold'] - q5_df['winter_gold']).idxmax()
-
+    q5_df['difference'] = abs(q5_df['summer_gold'] - q5_df['winter_gold'])
+    answer = q5_df.loc[(q5_df.difference == q5_df['difference'].max())]
+    answer.drop(answer.columns.difference(['difference']),1, inplace=True)
     print("--------------- question_5 ---------------")
-    print(diff.to_string())
+    print(answer.to_string())
     pass
 
 def question_6():
