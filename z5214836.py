@@ -1,7 +1,15 @@
 import pandas as pd
+import matplotlib.pyplot as plt
 
 #pd.set_option('display.max_columns', None, 'display.max_rows', None)
 pd.option_context('display.max_columns', None, 'display.max_rows', None)
+
+def make_total_medal_column(df, column_name, column_list):
+
+    df[column_name] = df[column_list].sum(axis=1)
+    df.sort_values(by=[column_name], ascending=False,inplace=True)
+
+    return df
 
 def convert_to_numeric(df):
 
@@ -87,17 +95,31 @@ def question_6():
     q6_df = question_3(None)
     q6_df = convert_to_numeric(q6_df)
     columns = ['summer_gold', 'summer_silver', 'summer_bronze', 'winter_gold', 'winter_silver', 'winter_bronze']
-    q6_df['total_medals'] = q6_df[columns].sum(axis=1)
-    q6_df.sort_values(by=['total_medals'], ascending=False,inplace=True)
-    q6_df.to_csv('q6.csv')
+    q6_df = make_total_medal_column(q6_df, 'total_medals', columns)
     reduced_df = q6_df.drop(q6_df.columns.difference(['total_medals']),1)
     top_5 = reduced_df.head(5)
     bottom_5 = reduced_df.tail(5)
-    answer = pd.concat([top_5, bottom_5])
     print("--------------- question_6 ---------------")
-    print(answer.to_string())
+    print("The top 5 medal earners are:")
+    print(top_5.to_string())
+    print()
+    print("The bottom 5 medal earners are:")
+    print(bottom_5.to_string())
 
 def question_7():
+    q7_df = question_3(None)
+    q7_df = convert_to_numeric(q7_df)
+    summer_totals = ['summer_gold', 'summer_silver', 'summer_bronze']
+    winter_totals = ['winter_gold', 'winter_silver', 'winter_bronze']
+    q7_df = make_total_medal_column(q7_df, 'summer_totals', summer_totals)
+    q7_df = make_total_medal_column(q7_df, 'winter_totals', winter_totals)
+    reduced_df = q7_df.drop(q7_df.columns.difference(['summer_totals','winter_totals']),1)
+    reduced_df = reduced_df.head(10)
+    reduced_df = make_total_medal_column(reduced_df, 'total_medals', ['summer_totals','winter_totals'])
+    stacked_df = reduced_df.groupby(level=[0]).sum().sort_values(by= ['total_medals'],ascending=False)
+    reduced_df.reindex(index=stacked_df.index, level=0).unstack().plot.bar(stacked=True)
+    plt.show()
+    print(stacked_df)
     print("--------------- question_7 ---------------")
     pass
 
