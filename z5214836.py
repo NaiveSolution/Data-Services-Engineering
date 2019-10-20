@@ -74,6 +74,7 @@ def question_3(print_val):
     return q3_df
 
 def question_4():
+
     q4_df = question_3(None)
     #q4_df.to_csv('output.csv')
     q4_df = convert_to_numeric(q4_df)
@@ -83,6 +84,7 @@ def question_4():
     print(answer['summer_gold'].to_string())
 
 def question_5():
+
     q5_df = question_3(None)
     q5_df = convert_to_numeric(q5_df)
     q5_df['difference'] = abs(q5_df['summer_gold'] - q5_df['winter_gold'])
@@ -92,6 +94,7 @@ def question_5():
     print(answer.to_string())
 
 def question_6():
+
     q6_df = question_3(None)
     q6_df = convert_to_numeric(q6_df)
     columns = ['summer_gold', 'summer_silver', 'summer_bronze', 'winter_gold', 'winter_silver', 'winter_bronze']
@@ -107,6 +110,7 @@ def question_6():
     print(bottom_5.to_string())
 
 def question_7():
+
     q7_df = question_3(None)
     q7_df = convert_to_numeric(q7_df)
     summer_totals = ['summer_gold', 'summer_silver', 'summer_bronze']
@@ -116,23 +120,53 @@ def question_7():
     reduced_df = q7_df.drop(q7_df.columns.difference(['summer_totals','winter_totals']),1)
     reduced_df = reduced_df.head(10)
     reduced_df = make_total_medal_column(reduced_df, 'total_medals', ['summer_totals','winter_totals'])
-    stacked_df = reduced_df.groupby(level=[0]).sum().sort_values(by= ['total_medals'],ascending=False)
-    reduced_df.reindex(index=stacked_df.index, level=0).unstack().plot.bar(stacked=True)
-    plt.show()
-    print(stacked_df)
+    # print(reduced_df)
+    reduced_df.drop(['total_medals'], axis=1, inplace=True)
+
+    df2 = reduced_df.groupby(['summer_totals', 'winter_totals'], level=[0]).sum()
+    df2.plot(kind='barh', stacked=True)
+
     print("--------------- question_7 ---------------")
-    pass
+    plt.title('Medals for Winter and Summer Games')
+    #plt.show()
 
 def question_8():
-    print("--------------- question_8 ---------------")
-    pass
 
-def question_9():
+    q8_df = question_3(None)
+    q8_df = convert_to_numeric(q8_df)
+    countries = ['United States', 'Australia', 'Great Britain', 'Japan', 'New Zealand']
+    q8_df = q8_df[q8_df.index.isin(countries)]
+    q8_df = q8_df.drop(q8_df.columns.difference(['winter_gold','winter_silver', 'winter_bronze']),1)
+    #print(q8_df)
+    
     print("--------------- question_8 ---------------")
-    pass
+    q8_df.plot.bar()
+    #plt.show()
+
+def question_9(print_val):
+
+    q9_df = question_3(None)
+    q9_df = convert_to_numeric(q9_df)
+    q9_df['summer_rank'] = 0
+    q9_df['winter_rank'] = 0
+    q9_df['summer_rank'] = q9_df.apply(lambda x: 0 if q9_df['summer_participation'].any() == 0 else \
+                        (5*q9_df['summer_gold'] + 3*q9_df['summer_silver'] + q9_df['summer_bronze'])/q9_df['summer_participation'])
+    q9_df['winter_rank'] = q9_df.apply(lambda x: 0 if q9_df['winter_participation'].any() == 0 else \
+                        (5*q9_df['winter_gold'] + 3*q9_df['winter_silver'] + q9_df['winter_bronze'])/q9_df['winter_participation'])
+    q9_df.fillna(value=0,inplace=True)
+    q9_df.sort_values(by=['summer_rank'], ascending=False, inplace=True)
+    result = q9_df.drop(q9_df.columns.difference(['summer_rank']),1).head(5)
+    if print_val:
+        print("--------------- question_9 ---------------")
+        print(result.to_string())
+    return q9_df
 
 def question_10():
-    print("--------------- question_8 ---------------")
+    
+    q10_df = question_9(None)
+    q10_df.sort_values(by=['winter_rank'], ascending=False, inplace=True)
+    print(q10_df)
+    print("--------------- question_10 ---------------")
     pass
 
 if __name__ == "__main__":
@@ -144,5 +178,5 @@ if __name__ == "__main__":
     question_6()
     question_7()
     question_8()
-    question_9()
+    q9_df = question_9(1)
     question_10()
