@@ -1,5 +1,6 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+import matplotlib.patches as mpatches
 
 #pd.set_option('display.max_columns', None, 'display.max_rows', None)
 pd.option_context('display.max_columns', None, 'display.max_rows', None)
@@ -124,7 +125,7 @@ def question_7():
     reduced_df.drop(['total_medals'], axis=1, inplace=True)
 
     df2 = reduced_df.groupby(['summer_totals', 'winter_totals'], level=[0]).sum()
-    df2.plot(kind='barh', stacked=True)
+    #df2.plot(kind='barh', stacked=True)
 
     print("--------------- question_7 ---------------")
     plt.title('Medals for Winter and Summer Games')
@@ -140,7 +141,7 @@ def question_8():
     #print(q8_df)
     
     print("--------------- question_8 ---------------")
-    q8_df.plot.bar()
+    #q8_df.plot.bar()
     #plt.show()
 
 def question_9(print_val):
@@ -164,10 +165,31 @@ def question_9(print_val):
 def question_10():
     
     q10_df = question_9(None)
+    continents = pd.read_csv('Countries-Continents.csv')
     q10_df.sort_values(by=['winter_rank'], ascending=False, inplace=True)
-    print(q10_df)
+
+    result = pd.merge(q10_df,continents, how='left', on='Country')
+    result.fillna(value='Unsorted', inplace=True)
+    result.set_index('Country', inplace=True)
+    result = result.drop(result.columns.difference(['summer_rank', 'winter_rank', 'Continent']),1)
+
+    #result.to_csv('result.csv')
+    colours = {'Oceania' : 'blue', 'North America' : 'red', 'Europe' : 'green', 'Africa' : 'black', 'South America' : 'pink', 'Asia' : 'yellow', 'Unsorted' : 'gray'}
+    plt.scatter(result['summer_rank'], result['winter_rank'], c=result['Continent'].apply(lambda x: colours[x]), s=10, alpha=0.85)
+
+    c_legend = [mpatches.Patch(facecolor = value, label = key, alpha = 0.7) for key, value in colours.items()]
+    plt.legend(handles = c_legend, loc='best')
+
+    for i,lbl in enumerate(result.index):
+        plt.annotate(lbl, (result['summer_rank'][i], result['winter_rank'][i]),fontsize = 8)
+
+    plt.grid(True)
+    plt.xlabel('Summer Rate')
+    plt.ylabel('Winter Rate')
+
+    plt.show()
     print("--------------- question_10 ---------------")
-    pass
+    
 
 if __name__ == "__main__":
     q1_df = question_1(1)
