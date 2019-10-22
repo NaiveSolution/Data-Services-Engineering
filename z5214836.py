@@ -184,12 +184,11 @@ def question_10():
         plt.annotate(lbl, (result['summer_rank'][i], result['winter_rank'][i]),fontsize = 8)
 
     plt.grid(True)
-    plt.xlabel('Summer Rate')
-    plt.ylabel('Winter Rate')
+    plt.xlabel('Points per participation for summer games')
+    plt.ylabel('Points per participation for winter games')
 
-    plt.show()
     print("--------------- question_10 ---------------")
-    
+    plt.show()
     
 
 if __name__ == "__main__":
