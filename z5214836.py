@@ -125,11 +125,11 @@ def question_7():
     reduced_df.drop(['total_medals'], axis=1, inplace=True)
 
     df2 = reduced_df.groupby(['summer_totals', 'winter_totals'], level=[0]).sum()
-    #df2.plot(kind='barh', stacked=True)
+    df2.plot(kind='barh', stacked=True)
 
     print("--------------- question_7 ---------------")
     plt.title('Medals for Winter and Summer Games')
-    #plt.show()
+    plt.show()
 
 def question_8():
 
@@ -141,8 +141,8 @@ def question_8():
     #print(q8_df)
     
     print("--------------- question_8 ---------------")
-    #q8_df.plot.bar()
-    #plt.show()
+    q8_df.plot.bar()
+    plt.show()
 
 def question_9(print_val):
 
