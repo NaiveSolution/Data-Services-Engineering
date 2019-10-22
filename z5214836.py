@@ -190,6 +190,7 @@ def question_10():
     plt.show()
     print("--------------- question_10 ---------------")
     
+    
 
 if __name__ == "__main__":
     q1_df = question_1(1)
