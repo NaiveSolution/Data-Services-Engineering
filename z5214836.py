@@ -122,11 +122,10 @@ def question_7():
     reduced_df = reduced_df.head(10)
     reduced_df = make_total_medal_column(reduced_df, 'total_medals', ['summer_totals','winter_totals'])
     # print(reduced_df)
+    reduced_df.sort_values(by=['total_medals'], ascending=True,inplace=True)
     reduced_df.drop(['total_medals'], axis=1, inplace=True)
-
-    df2 = reduced_df.groupby(['summer_totals', 'winter_totals'], level=[0]).sum()
-    df2.plot(kind='barh', stacked=True)
-
+    reduced_df.plot(kind='barh', stacked=True)
+    
     print("--------------- question_7 ---------------")
     plt.title('Medals for Winter and Summer Games')
     plt.show()
